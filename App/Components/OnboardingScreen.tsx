@@ -35,7 +35,7 @@ const OnboardingScreen = () => {
 	};
 
 	const nextSlideFunc = () => {
-		const nextSlideIndex = slideIndex < 4 ? slideIndex + 1 : slideIndex;
+		const nextSlideIndex = slideIndex === 2 ? slideIndex : slideIndex + 1;
 
 		const offset = nextSlideIndex * wp(100);
 
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
 	},
 	buttonText: {
 		fontSize: hp(2.2),
-		fontFamily: "Raleway_600SemiBold",
+		fontFamily: "Raleway_SemiBold",
 		color: "#fff",
 	},
 });

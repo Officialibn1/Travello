@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, ScrollView } from "react-native";
 import React from "react";
-import { containerStyle } from "../../App/Shared/Styles";
+import { containerStyle } from "../App/Shared/Styles";
 
 const HomeScreen = () => {
 	return (

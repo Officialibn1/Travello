@@ -1,70 +1,47 @@
 import * as React from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import MainApp from "./App/Navigations/MainApp";
 import OnboardingScreen from "./App/Components/OnboardingScreen";
 
 import * as SplashScreen from "expo-splash-screen";
 
-import Entypo from "@expo/vector-icons/Entypo";
-
-import {
-	useFonts,
-	Raleway_100Thin,
-	Raleway_200ExtraLight,
-	Raleway_300Light,
-	Raleway_400Regular,
-	Raleway_500Medium,
-	Raleway_600SemiBold,
-	Raleway_700Bold,
-	Raleway_800ExtraBold,
-	Raleway_900Black,
-	Raleway_100Thin_Italic,
-	Raleway_200ExtraLight_Italic,
-	Raleway_300Light_Italic,
-	Raleway_400Regular_Italic,
-	Raleway_500Medium_Italic,
-	Raleway_600SemiBold_Italic,
-	Raleway_700Bold_Italic,
-	Raleway_800ExtraBold_Italic,
-	Raleway_900Black_Italic,
-} from "@expo-google-fonts/raleway";
+import { View, Text } from "react-native";
+import { useFonts } from "expo-font";
+import { Raleway_500Medium } from "@expo-google-fonts/raleway";
+import AuthStack from "./App/Navigations/AuthStack";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-	let [fontsLoaded] = useFonts({
-		Raleway_100Thin,
-		Raleway_200ExtraLight,
-		Raleway_300Light,
-		Raleway_400Regular,
-		Raleway_500Medium,
-		Raleway_600SemiBold,
-		Raleway_700Bold,
-		Raleway_800ExtraBold,
-		Raleway_900Black,
-		Raleway_100Thin_Italic,
-		Raleway_200ExtraLight_Italic,
-		Raleway_300Light_Italic,
-		Raleway_400Regular_Italic,
-		Raleway_500Medium_Italic,
-		Raleway_600SemiBold_Italic,
-		Raleway_700Bold_Italic,
-		Raleway_800ExtraBold_Italic,
-		Raleway_900Black_Italic,
+	const [fontsLoaded, fontError] = useFonts({
+		Raleway_Black: require("./assets/Fonts/Raleway/static/Raleway-Black.ttf"),
+		Raleway_SemiBold: require("./assets/Fonts/Raleway/static/Raleway-SemiBold.ttf"),
+		Raleway_ExtraBold: require("./assets/Fonts/Raleway/static/Raleway-ExtraBold.ttf"),
+		Raleway_Bold: require("./assets/Fonts/Raleway/static/Raleway-Bold.ttf"),
+		Raleway_Medium: require("./assets/Fonts/Raleway/static/Raleway-Medium.ttf"),
+		Raleway_ExtraLight: require("./assets/Fonts/Raleway/static/Raleway-ExtraLight.ttf"),
+		Raleway_Light: require("./assets/Fonts/Raleway/static/Raleway-Light.ttf"),
+		Raleway_Thin: require("./assets/Fonts/Raleway/static/Raleway-Thin.ttf"),
 	});
 
-	if (fontsLoaded) {
-		SplashScreen.hideAsync();
+	const onLayoutRootView = React.useCallback(async () => {
+		if (fontsLoaded || fontError) {
+			await SplashScreen.hideAsync();
+		}
+	}, [fontsLoaded, fontError]);
+
+	if (!fontsLoaded && !fontError) {
+		return null;
 	}
+
+	onLayoutRootView();
 
 	return (
 		<NavigationContainer>
 			{/* <MainApp /> */}
 
-			<OnboardingScreen />
+			<AuthStack />
 		</NavigationContainer>
 	);
 }

@@ -4,13 +4,13 @@ import {
 	FontAwesome6,
 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from "../../assets/Screens/HomeScreen";
-import ProfileScreen from "../../assets/Screens/ProfileScreen";
-import SearchScreen from "../../assets/Screens/SearchScreen";
-import MessagesScreen from "../../assets/Screens/MessagesScreen";
+import HomeScreen from "../../Screens/HomeScreen";
+import ProfileScreen from "../../Screens/ProfileScreen";
+import SearchScreen from "../../Screens/SearchScreen";
+import MessagesScreen from "../../Screens/MessagesScreen";
 import { BlurView } from "expo-blur";
 import { StyleSheet } from "react-native";
-import CallenderScreen from "../../assets/Screens/CallenderScreen";
+import CallenderScreen from "../../Screens/CallenderScreen";
 
 const Tab = createBottomTabNavigator();
 
