@@ -17,9 +17,12 @@ import {
 import { OnboardingData, onboardingData } from "../../lib/data";
 import OnboardingSlide from "./OnboardingSlide";
 import { TextStyles } from "../Shared/Styles";
+import { useNavigation } from "@react-navigation/native";
 
 const OnboardingScreen = () => {
 	const [slideIndex, setSlideIndex] = useState<number>(0);
+
+	const navigation = useNavigation();
 
 	// SLIDE REF
 	const slideRef: React.LegacyRef<FlatList<OnboardingData>> | undefined =
@@ -35,13 +38,24 @@ const OnboardingScreen = () => {
 	};
 
 	const nextSlideFunc = () => {
-		const nextSlideIndex = slideIndex === 2 ? slideIndex : slideIndex + 1;
+		if (slideIndex === 2) {
+			navigation.reset({
+				index: 0,
+				routes: [
+					{
+						name: "LoginScreen" as never,
+					},
+				],
+			});
+		} else {
+			const nextSlideIndex = slideIndex === 2 ? slideIndex : slideIndex + 1;
 
-		const offset = nextSlideIndex * wp(100);
+			const offset = nextSlideIndex * wp(100);
 
-		slideRef.current?.scrollToOffset({ offset });
+			slideRef.current?.scrollToOffset({ offset });
 
-		setSlideIndex(nextSlideIndex);
+			setSlideIndex(nextSlideIndex);
+		}
 	};
 	return (
 		<View style={styles.container}>
