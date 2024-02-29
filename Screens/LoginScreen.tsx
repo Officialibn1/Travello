@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
+import { useForm, Controller } from "react-hook-form";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
@@ -24,9 +26,30 @@ import {
 	heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
+type FormType = {
+	email: string;
+	password: string;
+};
+
 const LoginScreen = () => {
 	// PASSWORD VISIBLE STATE
 	const [showPassword, setShowPassword] = useState(false);
+
+	// REACT HOOK FORM SCHEME
+	const {
+		control,
+		handleSubmit,
+		formState: { errors },
+	} = useForm<FormType>({
+		defaultValues: {
+			email: "",
+			password: "",
+		},
+	});
+
+	const submit = (data: any) => {
+		console.log(data);
+	};
 
 	useEffect(() => {
 		AsyncStorage.setItem("appLaunched", "launched");
@@ -52,16 +75,70 @@ const LoginScreen = () => {
 				{/* FORM CONTAINER */}
 				<View style={styles.formContainer}>
 					{/* EMAIL CONTAINER */}
-					<View style={TextInputStyles.container}>
-						<TextInput
-							style={TextInputStyles.input}
-							placeholder='example@example.com'
-							placeholderTextColor={"#000"}
-						/>
-					</View>
+					<Controller
+						// @ts-ignore
+						control={control}
+						rules={{
+							required: true,
+							pattern: {
+								value: /^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/,
+								message: "Invalid email address",
+							},
+						}}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<View style={TextInputStyles.container}>
+								<TextInput
+									style={TextInputStyles.input}
+									placeholder='example@example.com'
+									placeholderTextColor={"#000"}
+									onChangeText={onChange}
+									onBlur={onBlur}
+									value={value}
+								/>
+							</View>
+						)}
+						name='email'
+					/>
+					{errors.email && (
+						<Text style={styles.errorStyle}>{errors.email.message}</Text>
+					)}
 
 					{/* PASSWORD CONTAINER */}
-					<View style={TextInputStyles.container}>
+					<Controller
+						// @ts-ignore
+						control={control}
+						rules={{
+							required: true,
+						}}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<View style={TextInputStyles.container}>
+								<TextInput
+									style={TextInputStyles.input}
+									placeholder='Enter Password'
+									secureTextEntry={showPassword}
+									placeholderTextColor={"#000"}
+									onChangeText={onChange}
+									onBlur={onBlur}
+									value={value}
+								/>
+
+								<TouchableOpacity
+									style={TextInputStyles.showHideButton}
+									onPress={() => setShowPassword((prev) => !prev)}>
+									<Feather
+										name={!showPassword ? "eye-off" : "eye"}
+										size={24}
+										color='black'
+									/>
+								</TouchableOpacity>
+							</View>
+						)}
+						name='password'
+					/>
+					{errors.password && (
+						<Text style={styles.errorStyle}>Password is required</Text>
+					)}
+					{/* <View style={TextInputStyles.container}>
 						<TextInput
 							style={TextInputStyles.input}
 							placeholder='Enter Password'
@@ -78,7 +155,7 @@ const LoginScreen = () => {
 								color='black'
 							/>
 						</TouchableOpacity>
-					</View>
+					</View> */}
 
 					{/* FORGET PASSWORD */}
 					<TouchableOpacity
@@ -89,6 +166,7 @@ const LoginScreen = () => {
 
 					{/* SUBMIT BUTTON CONTAINER */}
 					<TouchableOpacity
+						onPress={handleSubmit(submit)}
 						activeOpacity={0.5}
 						style={{ ...TextInputStyles.signInButton, marginTop: hp(4) }}>
 						<Text style={TextInputStyles.signInButtonText}>Sign In</Text>
@@ -194,5 +272,9 @@ const styles = StyleSheet.create({
 		// borderColor: "#707B81",
 		alignItems: "center",
 		justifyContent: "center",
+	},
+	errorStyle: {
+		fontFamily: "Raleway_Light",
+		color: "#FF7029",
 	},
 });
