@@ -6,6 +6,7 @@ import {
 	SafeAreaView,
 	StyleSheet,
 	TextInput,
+	ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -27,11 +28,12 @@ import {
 import { useNavigation } from "@react-navigation/native";
 
 type FormType = {
+	name: string;
 	email: string;
 	password: string;
 };
 
-const LoginScreen = () => {
+const SignupScreen = () => {
 	// PASSWORD VISIBLE STATE
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -45,6 +47,7 @@ const LoginScreen = () => {
 		formState: { errors },
 	} = useForm<FormType>({
 		defaultValues: {
+			name: "",
 			email: "",
 			password: "",
 		},
@@ -64,19 +67,44 @@ const LoginScreen = () => {
 	return (
 		<SafeAreaView style={styles.container}>
 			{/* CONTAINER */}
-			<View style={containerStyle.container}>
+			<ScrollView style={containerStyle.container}>
 				{/* TEXT CONTAINER */}
 				<View style={styles.headerTextContainer}>
 					{/* TITLE */}
-					<Text style={TextStyles.title}>Sign in now</Text>
+					<Text style={TextStyles.title}>Sign up now</Text>
 					{/* SUB TITLE */}
 					<Text style={TextStyles.textBase}>
-						Please sign in to continue our app
+						Please fill the details and create account
 					</Text>
 				</View>
 
 				{/* FORM CONTAINER */}
 				<View style={styles.formContainer}>
+					{/* NAME CONTAINER */}
+					<Controller
+						// @ts-ignore
+						control={control}
+						rules={{
+							required: true,
+							minLength: 6,
+						}}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<View style={TextInputStyles.container}>
+								<TextInput
+									style={TextInputStyles.input}
+									placeholder='John Doe'
+									placeholderTextColor={"#000"}
+									onChangeText={onChange}
+									onBlur={onBlur}
+									value={value}
+								/>
+							</View>
+						)}
+						name='name'
+					/>
+					{errors.name && (
+						<Text style={styles.errorStyle}>Full Name is required</Text>
+					)}
 					{/* EMAIL CONTAINER */}
 					<Controller
 						// @ts-ignore
@@ -84,7 +112,7 @@ const LoginScreen = () => {
 						rules={{
 							required: true,
 							pattern: {
-								value: /^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/,
+								value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
 								message: "Invalid email address",
 							},
 						}}
@@ -103,7 +131,11 @@ const LoginScreen = () => {
 						name='email'
 					/>
 					{errors.email && (
-						<Text style={styles.errorStyle}>{errors.email.message}</Text>
+						<Text style={styles.errorStyle}>
+							{!errors.email.message
+								? "Email is required!"
+								: errors.email.message}
+						</Text>
 					)}
 
 					{/* PASSWORD CONTAINER */}
@@ -112,6 +144,10 @@ const LoginScreen = () => {
 						control={control}
 						rules={{
 							required: true,
+							pattern: {
+								value: /^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/,
+								message: "Password must meet all requirements!",
+							},
 						}}
 						render={({ field: { onChange, onBlur, value } }) => (
 							<View style={TextInputStyles.container}>
@@ -139,39 +175,49 @@ const LoginScreen = () => {
 						name='password'
 					/>
 					{errors.password && (
-						<Text style={styles.errorStyle}>Password is required</Text>
+						<Text style={styles.errorStyle}>
+							{!errors.password.message
+								? "Password is required!"
+								: errors.password.message}
+						</Text>
 					)}
 
-					{/* FORGET PASSWORD */}
-					<TouchableOpacity
-						activeOpacity={0.5}
-						style={{ width: "auto", marginLeft: "auto" }}>
-						<Text style={styles.forgetPasswordText}>Forgot Password?</Text>
-					</TouchableOpacity>
+					{/* PASSWORD REQUIREMENTS */}
+					<View style={{ gap: 5 }}>
+						<Text style={{ fontFamily: "Raleway_Light" }}>
+							Password must be 8 characters
+						</Text>
+						<Text style={{ fontFamily: "Raleway_Light" }}>
+							Password muct contain a number and Capital letter
+						</Text>
+						<Text style={{ fontFamily: "Raleway_Light" }}>
+							Password must contain special character
+						</Text>
+					</View>
 
 					{/* SUBMIT BUTTON CONTAINER */}
 					<TouchableOpacity
 						onPress={handleSubmit(submit)}
 						activeOpacity={0.5}
-						style={{ ...TextInputStyles.signInButton, marginTop: hp(4) }}>
-						<Text style={TextInputStyles.signInButtonText}>Sign In</Text>
+						style={{ ...TextInputStyles.signInButton, marginTop: hp(2) }}>
+						<Text style={TextInputStyles.signInButtonText}>Sign Up</Text>
 					</TouchableOpacity>
 
 					{/* SIGNUP PAGE LINK CONTAINER */}
-					<View style={styles.headerTextContainer}>
+					<View style={{ ...styles.headerTextContainer, marginTop: hp(2.5) }}>
 						{/* SUB TITLE */}
 
 						<View style={{ flexDirection: "row", alignItems: "center" }}>
-							<Text style={TextStyles.textBase}>Don't have an account?</Text>
+							<Text style={TextStyles.textBase}>Already have an account?</Text>
 							<Text
-								onPress={() => navigation.navigate("SignupScreen" as never)}
+								onPress={() => navigation.goBack()}
 								style={{
 									...TextStyles.textBase,
 									color: "#FF7029",
 									fontFamily: "Raleway_Medium",
 								}}>
 								{" "}
-								Sign up
+								Sign In
 							</Text>
 						</View>
 						{/* SUB TITLE */}
@@ -214,12 +260,12 @@ const LoginScreen = () => {
 						/>
 					</TouchableOpacity>
 				</View>
-			</View>
+			</ScrollView>
 		</SafeAreaView>
 	);
 };
 
-export default LoginScreen;
+export default SignupScreen;
 
 const styles = StyleSheet.create({
 	container: {
@@ -247,7 +293,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 		gap: wp(5),
-		marginTop: hp(10),
+		marginTop: hp(6),
 	},
 	socialIcon: {
 		// padding: hp(2),
