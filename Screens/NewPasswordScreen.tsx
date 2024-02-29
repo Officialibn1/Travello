@@ -1,4 +1,4 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, Feather } from "@expo/vector-icons";
 import {
 	View,
 	Text,
@@ -29,12 +29,18 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { MyStackParamList } from "../typings";
 
 type FormType = {
-	email: string;
+	password: string;
+	confirmPassword: string;
 };
 
-const ForgetPassScreen = () => {
+const NewPasswordScreen = () => {
 	// MODAL VISIBLE STATE
 	const [isModalVisible, setIsModalVisible] = useState(false);
+
+	// PASSWORD VISIBLE STATE
+	const [showPassword, setShowPassword] = useState(false);
+
+	const [confirmPass, setConfirmPass] = useState(false);
 
 	const toggleModal = () => {
 		setIsModalVisible((prev) => !prev);
@@ -47,19 +53,30 @@ const ForgetPassScreen = () => {
 	const {
 		control,
 		handleSubmit,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 	} = useForm<FormType>({
 		defaultValues: {
-			email: "",
+			password: "",
+			confirmPassword: "",
 		},
 	});
 
 	const submit = async (data: FormType) => {
+		if (data.confirmPassword !== data.password) {
+			setConfirmPass(true);
+
+			return;
+		}
+		setConfirmPass(false);
+
 		toggleModal();
 
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 
-		navigation.navigate("OTPScreen", { email: data.email });
+		navigation.reset({
+			index: 0,
+			routes: [{ name: "LoginScreen" as never }],
+		});
 
 		await new Promise((resolve) => setTimeout(resolve, 500));
 
@@ -93,10 +110,10 @@ const ForgetPassScreen = () => {
 									marginBottom: hp(2),
 									textAlign: "center",
 								}}>
-								Check your email
+								Password Changed
 							</Text>
 							<Text style={{ ...TextStyles.textBase, textAlign: "center" }}>
-								We have send password recovery instruction to your email{" "}
+								Your password have been changed successfully{" "}
 							</Text>
 						</View>
 					</View>
@@ -105,48 +122,125 @@ const ForgetPassScreen = () => {
 				{/* TEXT CONTAINER */}
 				<View style={styles.headerTextContainer}>
 					{/* TITLE */}
-					<Text style={TextStyles.title}>Forgot password</Text>
+					<Text style={TextStyles.title}>Reset password</Text>
 					{/* SUB TITLE */}
 					<Text style={{ ...TextStyles.textBase, textAlign: "center" }}>
-						Enter your email account to reset your password{" "}
+						Create a new password for your account{" "}
 					</Text>
 				</View>
 
 				{/* FORM CONTAINER */}
 				<View style={styles.formContainer}>
 					{/* EMAIL CONTAINER */}
+					{/* PASSWORD CONTAINER */}
 					<Controller
 						// @ts-ignore
 						control={control}
 						rules={{
 							required: true,
 							pattern: {
-								value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
-								message: "Invalid email address",
+								value: /^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/,
+								message: "Password must meet all requirements!",
 							},
 						}}
 						render={({ field: { onChange, onBlur, value } }) => (
 							<View style={TextInputStyles.container}>
 								<TextInput
 									style={TextInputStyles.input}
-									placeholder='example@example.com'
+									placeholder='Enter Password'
+									secureTextEntry={showPassword}
 									placeholderTextColor={"#000"}
-									onChangeText={onChange}
 									autoCapitalize='none'
+									onChangeText={onChange}
 									onBlur={onBlur}
 									value={value}
 								/>
+
+								<TouchableOpacity
+									style={TextInputStyles.showHideButton}
+									onPress={() => setShowPassword((prev) => !prev)}>
+									<Feather
+										name={!showPassword ? "eye-off" : "eye"}
+										size={24}
+										color='black'
+									/>
+								</TouchableOpacity>
 							</View>
 						)}
-						name='email'
+						name='password'
 					/>
-					{errors.email && (
+
+					{errors.password && (
 						<Text style={styles.errorStyle}>
-							{!errors.email.message
-								? "Email is Required"
-								: errors.email?.message}
+							{!errors.password.message
+								? "Enter your password!"
+								: errors.password?.message}
 						</Text>
 					)}
+
+					{/* PASSWORD CONTAINER */}
+					<Controller
+						// @ts-ignore
+						control={control}
+						rules={{
+							required: true,
+							pattern: {
+								value: /^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/,
+								message: "Password must meet all requirements!",
+							},
+						}}
+						render={({ field: { onChange, onBlur, value } }) => (
+							<View style={TextInputStyles.container}>
+								<TextInput
+									style={TextInputStyles.input}
+									placeholder='Confirm Password'
+									secureTextEntry={showPassword}
+									placeholderTextColor={"#000"}
+									autoCapitalize='none'
+									onChangeText={onChange}
+									onBlur={onBlur}
+									value={value}
+								/>
+
+								<TouchableOpacity
+									style={TextInputStyles.showHideButton}
+									onPress={() => setShowPassword((prev) => !prev)}>
+									<Feather
+										name={!showPassword ? "eye-off" : "eye"}
+										size={24}
+										color='black'
+									/>
+								</TouchableOpacity>
+							</View>
+						)}
+						name='confirmPassword'
+					/>
+					{errors.confirmPassword && (
+						<Text style={styles.errorStyle}>
+							{!errors.confirmPassword.message
+								? "Confirm your password!"
+								: errors.confirmPassword?.message}
+						</Text>
+					)}
+
+					{confirmPass && (
+						<Text style={styles.errorStyle}>
+							{confirmPass ? "Confirm password must match your password!" : ""}
+						</Text>
+					)}
+
+					{/* PASSWORD REQUIREMENTS */}
+					<View style={{ gap: 5 }}>
+						<Text style={{ fontFamily: "Raleway_Light" }}>
+							Password must be 8 characters
+						</Text>
+						<Text style={{ fontFamily: "Raleway_Light" }}>
+							Password muct contain a number and Capital letter
+						</Text>
+						<Text style={{ fontFamily: "Raleway_Light" }}>
+							Password must contain special character
+						</Text>
+					</View>
 
 					{/* FORGET PASSWORD */}
 					<TouchableOpacity
@@ -169,7 +263,7 @@ const ForgetPassScreen = () => {
 	);
 };
 
-export default ForgetPassScreen;
+export default NewPasswordScreen;
 
 const styles = StyleSheet.create({
 	container: {

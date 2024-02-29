@@ -7,8 +7,9 @@ import {
 	StyleSheet,
 	TextInput,
 	Modal,
+	Alert,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { useForm, Controller } from "react-hook-form";
 
@@ -25,51 +26,107 @@ import {
 	widthPercentageToDP as wp,
 	heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { MyStackParamList } from "../typings";
+import { useGestureHandlerRef } from "@react-navigation/stack";
 
 type FormType = {
 	email: string;
 };
 
-const ForgetPassScreen = () => {
+const OTPScreen = () => {
 	// MODAL VISIBLE STATE
 	const [isModalVisible, setIsModalVisible] = useState(false);
+
+	const [error, setError] = useState(false);
+
+	// OTP INPUT REFS
+	const inputRefs: React.MutableRefObject<TextInput | null>[] = [
+		useRef(null),
+		useRef(null),
+		useRef(null),
+		useRef(null),
+	];
+
+	// OTP INOUT STATE
+	const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
+
+	const isTextInput = (
+		ref: React.RefObject<any>,
+	): ref is React.RefObject<TextInput> => {
+		return (ref.current as TextInput) !== null;
+	};
+
+	const handleChange = (text: string, index: number) => {
+		const sanitizedText = text.replace(/[^0-9]/g, "");
+
+		const newOtp = [...otp];
+
+		newOtp[index] = text;
+
+		setOtp(newOtp);
+
+		if (sanitizedText && index < otp.length - 1) {
+			// Check if ref holds a TextInput before accessing focus
+			if (isTextInput(inputRefs[index])) {
+				inputRefs[index + 1].current?.focus();
+			}
+		}
+
+		if (
+			!sanitizedText &&
+			index > 0 &&
+			!text &&
+			!inputRefs[index - 1].current?.isFocused()
+		) {
+			inputRefs[index - 1].current?.focus();
+		}
+		// handleNext(index);
+		// handlePrevious(index);
+	};
 
 	const toggleModal = () => {
 		setIsModalVisible((prev) => !prev);
 	};
 
-	// NAVIGATION HOOK
-	const navigation = useNavigation<NavigationProp<MyStackParamList>>();
-
-	// REACT HOOK FORM SCHEME
 	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm<FormType>({
-		defaultValues: {
-			email: "",
-		},
-	});
+		// @ts-ignore
+		params: { email },
+	} = useRoute<RouteProp<MyStackParamList>>();
 
-	const submit = async (data: FormType) => {
-		toggleModal();
+	// NAVIGATION HOOK
+	const navigation = useNavigation();
+
+	const submit = async () => {
+		if (
+			otp[0].length < 1 ||
+			otp[1].length < 1 ||
+			otp[2].length < 1 ||
+			otp[3].length < 1
+		) {
+			setError(true);
+
+			return;
+		}
 
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 
-		navigation.navigate("OTPScreen", { email: data.email });
+		toggleModal();
+
+		navigation.navigate("NewPasswordScreen" as never);
 
 		await new Promise((resolve) => setTimeout(resolve, 500));
 
 		toggleModal();
+
+		setError(false);
 	};
 
 	return (
 		<SafeAreaView style={styles.container}>
 			{/* CONTAINER */}
 			<View style={containerStyle.container}>
+				{/* OTP MODAL */}
 				<Modal
 					animationType='slide'
 					transparent={true}
@@ -82,7 +139,7 @@ const ForgetPassScreen = () => {
 						<View style={styles.modalContent}>
 							<View style={styles.modalIcon}>
 								<Ionicons
-									name='mail-open-outline'
+									name='checkmark-done'
 									size={30}
 									color='#fff'
 								/>
@@ -93,10 +150,10 @@ const ForgetPassScreen = () => {
 									marginBottom: hp(2),
 									textAlign: "center",
 								}}>
-								Check your email
+								Successful
 							</Text>
 							<Text style={{ ...TextStyles.textBase, textAlign: "center" }}>
-								We have send password recovery instruction to your email{" "}
+								Your OTP is verified successfully{" "}
 							</Text>
 						</View>
 					</View>
@@ -105,63 +162,52 @@ const ForgetPassScreen = () => {
 				{/* TEXT CONTAINER */}
 				<View style={styles.headerTextContainer}>
 					{/* TITLE */}
-					<Text style={TextStyles.title}>Forgot password</Text>
+					<Text style={TextStyles.title}>OTP Verification</Text>
 					{/* SUB TITLE */}
 					<Text style={{ ...TextStyles.textBase, textAlign: "center" }}>
-						Enter your email account to reset your password{" "}
+						Please check your email {email ? email : ""} to see the verification
+						code{" "}
 					</Text>
 				</View>
 
 				{/* FORM CONTAINER */}
 				<View style={styles.formContainer}>
 					{/* EMAIL CONTAINER */}
-					<Controller
-						// @ts-ignore
-						control={control}
-						rules={{
-							required: true,
-							pattern: {
-								value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i,
-								message: "Invalid email address",
-							},
-						}}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<View style={TextInputStyles.container}>
-								<TextInput
-									style={TextInputStyles.input}
-									placeholder='example@example.com'
-									placeholderTextColor={"#000"}
-									onChangeText={onChange}
-									autoCapitalize='none'
-									onBlur={onBlur}
-									value={value}
-								/>
-							</View>
-						)}
-						name='email'
-					/>
-					{errors.email && (
-						<Text style={styles.errorStyle}>
-							{!errors.email.message
-								? "Email is Required"
-								: errors.email?.message}
-						</Text>
-					)}
+
+					<View style={TextInputStyles.otpInputContainer}>
+						{otp.map((item, i) => (
+							<TextInput
+								key={i}
+								ref={inputRefs[i]}
+								style={TextInputStyles.otpInput}
+								// placeholder='example@example.com'
+								placeholderTextColor={"#000"}
+								onChangeText={(text) => handleChange(text, i)}
+								autoCapitalize='none'
+								value={otp[i]}
+								maxLength={1}
+								selectTextOnFocus={true}
+							/>
+						))}
+					</View>
+
+					{error && <Text style={styles.errorStyle}>All OTP are Required</Text>}
 
 					{/* FORGET PASSWORD */}
 					<TouchableOpacity
-						onPress={() => navigation.goBack()}
+						// onPress={() => navigation.goBack()}
 						activeOpacity={0.5}
 						style={{ width: "auto", marginLeft: "auto" }}>
-						<Text style={styles.forgetPasswordText}>Back to Login</Text>
+						<Text style={styles.forgetPasswordText}>Resend OTP</Text>
 					</TouchableOpacity>
 
 					{/* SUBMIT BUTTON CONTAINER */}
 					<TouchableOpacity
-						onPress={handleSubmit(submit)}
+						// onPress={handleSubmit(submit)}
 						activeOpacity={0.5}
+						onPressIn={() => submit()}
 						style={{ ...TextInputStyles.signInButton, marginTop: hp(4) }}>
-						<Text style={TextInputStyles.signInButtonText}>Reset Password</Text>
+						<Text style={TextInputStyles.signInButtonText}>Verify</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -169,7 +215,7 @@ const ForgetPassScreen = () => {
 	);
 };
 
-export default ForgetPassScreen;
+export default OTPScreen;
 
 const styles = StyleSheet.create({
 	container: {

@@ -57,13 +57,6 @@ const SignupScreen = () => {
 		console.log(data);
 	};
 
-	useEffect(() => {
-		AsyncStorage.setItem("appLaunched", "launched");
-	}, []);
-
-	const clear = () => {
-		AsyncStorage.removeItem("appLaunched");
-	};
 	return (
 		<SafeAreaView style={styles.container}>
 			{/* CONTAINER */}
@@ -135,7 +128,7 @@ const SignupScreen = () => {
 						<Text style={styles.errorStyle}>
 							{!errors.email.message
 								? "Email is required!"
-								: errors.email.message}
+								: errors.email?.message}
 						</Text>
 					)}
 
@@ -180,7 +173,7 @@ const SignupScreen = () => {
 						<Text style={styles.errorStyle}>
 							{!errors.password.message
 								? "Password is required!"
-								: errors.password.message}
+								: errors.password?.message}
 						</Text>
 					)}
 

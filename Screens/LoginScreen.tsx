@@ -105,7 +105,7 @@ const LoginScreen = () => {
 					/>
 					{errors.email && (
 						<Text style={styles.errorStyle}>
-							{!errors.email.message
+							{!errors.email?.message
 								? "Email is Required"
 								: errors.email.message}
 						</Text>

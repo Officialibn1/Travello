@@ -7,6 +7,8 @@ import LoginScreen from "../../Screens/LoginScreen";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignupScreen from "../../Screens/SignupScreen";
 import ForgetPassScreen from "../../Screens/ForgetPassScreen";
+import OTPScreen from "../../Screens/OTPScreen";
+import NewPasswordScreen from "../../Screens/NewPasswordScreen";
 
 const Stack = createStackNavigator();
 
@@ -16,8 +18,6 @@ const AuthStack = () => {
 	useEffect(() => {
 		const appLaunch = async () => {
 			const data = await AsyncStorage.getItem("appLaunched");
-
-			console.log(data);
 
 			if (data === null) {
 				setIsFirstLaunch(true);
@@ -57,6 +57,18 @@ const AuthStack = () => {
 				<Stack.Screen
 					name='ForgetPassScreen'
 					component={ForgetPassScreen}
+				/>
+
+				{/* OTP SCREEN */}
+				<Stack.Screen
+					name='OTPScreen'
+					component={OTPScreen}
+				/>
+
+				{/* NEW PASSWORD SCREEN */}
+				<Stack.Screen
+					name='NewPasswordScreen'
+					component={NewPasswordScreen}
 				/>
 			</Stack.Navigator>
 		)

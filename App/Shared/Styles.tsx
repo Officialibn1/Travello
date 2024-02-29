@@ -44,6 +44,29 @@ export const TextInputStyles = StyleSheet.create({
 		fontFamily: "Raleway_Light",
 	},
 
+	otpInputContainer: {
+		width: "100%",
+		height: hp(8),
+		minHeight: 60,
+		marginTop: hp(5),
+		position: "relative",
+		padding: 8,
+		flexDirection: "row",
+		justifyContent: "center",
+		alignItems: "center",
+		gap: hp(2),
+		// borderWidth: 1,
+	},
+
+	otpInput: {
+		backgroundColor: "#F7F7F9",
+		borderRadius: 10,
+		width: hp(7),
+		height: hp(7),
+		textAlign: "center",
+		fontSize: hp(2),
+	},
+
 	showHideButton: {
 		width: "12%",
 		alignItems: "center",

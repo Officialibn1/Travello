@@ -5,9 +5,7 @@ import OnboardingScreen from "./App/Components/OnboardingScreen";
 
 import * as SplashScreen from "expo-splash-screen";
 
-import { View, Text } from "react-native";
 import { useFonts } from "expo-font";
-import { Raleway_500Medium } from "@expo-google-fonts/raleway";
 import AuthStack from "./App/Navigations/AuthStack";
 
 // Keep the splash screen visible while we fetch resources
