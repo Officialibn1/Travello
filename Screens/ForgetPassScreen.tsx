@@ -28,10 +28,9 @@ import { useNavigation } from "@react-navigation/native";
 
 type FormType = {
 	email: string;
-	password: string;
 };
 
-const LoginScreen = () => {
+const ForgetPassScreen = () => {
 	// PASSWORD VISIBLE STATE
 	const [showPassword, setShowPassword] = useState(false);
 
@@ -46,7 +45,6 @@ const LoginScreen = () => {
 	} = useForm<FormType>({
 		defaultValues: {
 			email: "",
-			password: "",
 		},
 	});
 
@@ -68,10 +66,10 @@ const LoginScreen = () => {
 				{/* TEXT CONTAINER */}
 				<View style={styles.headerTextContainer}>
 					{/* TITLE */}
-					<Text style={TextStyles.title}>Sign in now</Text>
+					<Text style={TextStyles.title}>Forgot password</Text>
 					{/* SUB TITLE */}
-					<Text style={TextStyles.textBase}>
-						Please sign in to continue our app
+					<Text style={{ ...TextStyles.textBase, textAlign: "center" }}>
+						Enter your email account to reset your password{" "}
 					</Text>
 				</View>
 
@@ -94,8 +92,8 @@ const LoginScreen = () => {
 									style={TextInputStyles.input}
 									placeholder='example@example.com'
 									placeholderTextColor={"#000"}
-									autoCapitalize='none'
 									onChangeText={onChange}
+									autoCapitalize='none'
 									onBlur={onBlur}
 									value={value}
 								/>
@@ -111,49 +109,12 @@ const LoginScreen = () => {
 						</Text>
 					)}
 
-					{/* PASSWORD CONTAINER */}
-					<Controller
-						// @ts-ignore
-						control={control}
-						rules={{
-							required: true,
-						}}
-						render={({ field: { onChange, onBlur, value } }) => (
-							<View style={TextInputStyles.container}>
-								<TextInput
-									style={TextInputStyles.input}
-									placeholder='Enter Password'
-									secureTextEntry={showPassword}
-									placeholderTextColor={"#000"}
-									autoCapitalize='none'
-									onChangeText={onChange}
-									onBlur={onBlur}
-									value={value}
-								/>
-
-								<TouchableOpacity
-									style={TextInputStyles.showHideButton}
-									onPress={() => setShowPassword((prev) => !prev)}>
-									<Feather
-										name={!showPassword ? "eye-off" : "eye"}
-										size={24}
-										color='black'
-									/>
-								</TouchableOpacity>
-							</View>
-						)}
-						name='password'
-					/>
-					{errors.password && (
-						<Text style={styles.errorStyle}>Password is required</Text>
-					)}
-
 					{/* FORGET PASSWORD */}
 					<TouchableOpacity
-						onPress={() => navigation.navigate("ForgetPassScreen" as never)}
+						onPress={() => navigation.goBack()}
 						activeOpacity={0.5}
 						style={{ width: "auto", marginLeft: "auto" }}>
-						<Text style={styles.forgetPasswordText}>Forgot Password?</Text>
+						<Text style={styles.forgetPasswordText}>Back to Login</Text>
 					</TouchableOpacity>
 
 					{/* SUBMIT BUTTON CONTAINER */}
@@ -161,65 +122,7 @@ const LoginScreen = () => {
 						onPress={handleSubmit(submit)}
 						activeOpacity={0.5}
 						style={{ ...TextInputStyles.signInButton, marginTop: hp(4) }}>
-						<Text style={TextInputStyles.signInButtonText}>Sign In</Text>
-					</TouchableOpacity>
-
-					{/* SIGNUP PAGE LINK CONTAINER */}
-					<View style={styles.headerTextContainer}>
-						{/* SUB TITLE */}
-
-						<View style={{ flexDirection: "row", alignItems: "center" }}>
-							<Text style={TextStyles.textBase}>Don't have an account?</Text>
-							<Text
-								onPress={() => navigation.navigate("SignupScreen" as never)}
-								style={{
-									...TextStyles.textBase,
-									color: "#FF7029",
-									fontFamily: "Raleway_Medium",
-								}}>
-								{" "}
-								Sign up
-							</Text>
-						</View>
-						{/* SUB TITLE */}
-						<Text style={TextStyles.textBase}>Or connect</Text>
-					</View>
-				</View>
-
-				{/* SOCAIL ICON CONTAINER  */}
-				<View style={styles.socialContainer}>
-					{/* FACEBOOK */}
-					<TouchableOpacity
-						activeOpacity={0.5}
-						style={{ ...styles.socialIcon, backgroundColor: "#F7F7F9" }}>
-						<FontAwesome
-							name='facebook'
-							size={40}
-							color='#1877F2'
-						/>
-					</TouchableOpacity>
-
-					{/* INSTAGRAM */}
-					<TouchableOpacity
-						onPress={() => clear()}
-						activeOpacity={0.5}
-						style={{ ...styles.socialIcon, backgroundColor: "#F7F7F9" }}>
-						<FontAwesome
-							name='instagram'
-							size={40}
-							color='#F50000'
-						/>
-					</TouchableOpacity>
-
-					{/* TWITTER */}
-					<TouchableOpacity
-						activeOpacity={0.5}
-						style={{ ...styles.socialIcon, backgroundColor: "#F7F7F9" }}>
-						<FontAwesome6
-							name='x-twitter'
-							size={40}
-							color='#03A9F4'
-						/>
+						<Text style={TextInputStyles.signInButtonText}>Reset Password</Text>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -227,7 +130,7 @@ const LoginScreen = () => {
 	);
 };
 
-export default LoginScreen;
+export default ForgetPassScreen;
 
 const styles = StyleSheet.create({
 	container: {
