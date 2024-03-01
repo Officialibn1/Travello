@@ -99,7 +99,7 @@ const NewPasswordScreen = () => {
 						<View style={styles.modalContent}>
 							<View style={styles.modalIcon}>
 								<Ionicons
-									name='mail-open-outline'
+									name='checkmark-done'
 									size={30}
 									color='#fff'
 								/>

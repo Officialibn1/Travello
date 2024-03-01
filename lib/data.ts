@@ -38,3 +38,20 @@ export const onboardingData: OnboardingData[] = [
 		desc: "To get the best of your adventure you just need to leave and go where you like. we are waiting for you",
 	},
 ];
+
+type ValidLogins = { email: string; password: string };
+// VALID LOGINS
+export const validLogins: ValidLogins[] = [
+	{
+		email: "ibn@ibn.com",
+		password: "12@Ab12345",
+	},
+	{
+		email: "ibn@gmail.com",
+		password: "12@Ab12345",
+	},
+	{
+		email: "john@gmail.com",
+		password: "12@Ab12345",
+	},
+];

@@ -1,4 +1,9 @@
-import { FontAwesome, FontAwesome6, Feather } from "@expo/vector-icons";
+import {
+	FontAwesome,
+	FontAwesome6,
+	Feather,
+	Ionicons,
+} from "@expo/vector-icons";
 import {
 	View,
 	Text,
@@ -6,6 +11,7 @@ import {
 	SafeAreaView,
 	StyleSheet,
 	TextInput,
+	Modal,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -25,6 +31,7 @@ import {
 	heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
+import { validLogins } from "../lib/data";
 
 type FormType = {
 	email: string;
@@ -34,6 +41,12 @@ type FormType = {
 const LoginScreen = () => {
 	// PASSWORD VISIBLE STATE
 	const [showPassword, setShowPassword] = useState(false);
+
+	// INVALID MODAL STATE
+	const [isInvalidVisible, setIsInvalidVisible] = useState(false);
+
+	// INVALID MODAL STATE
+	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	// NAVIGATION HOOK
 	const navigation = useNavigation();
@@ -50,8 +63,38 @@ const LoginScreen = () => {
 		},
 	});
 
-	const submit = (data: any) => {
-		console.log(data);
+	const submit = async (data: FormType) => {
+		// CREATE A MOCK DELAY
+
+		await new Promise((resolve) => setTimeout(resolve, 1500));
+
+		// GET A USER FROM THE DUMMY DATA USING THE INPUTED EMAIL
+		const user = validLogins.find((user) => user.email === data.email);
+
+		// CHECK IS THERE IS A USER AND IF THE PASSWORD PROVIDED MATCHED THE PASSWORD
+		if (!user || user?.password !== data.password) {
+			// SET THE INVALID MODAL TO TRUE
+			setIsInvalidVisible(true);
+
+			// CREATE A MOCK DELAY
+			await new Promise((resolve) => setTimeout(resolve, 1800));
+
+			// SET THE INVALID MODAL TO FALSE
+			setIsInvalidVisible(false);
+
+			return;
+		}
+
+		// SET THE SUCCESSFUL LOGIN MODAL TO TRUE
+		setIsModalVisible(true);
+
+		// CREATE A MOCK DELAY
+		await new Promise((resolve) => setTimeout(resolve, 1800));
+
+		// SET THE SUCCESSFUL LOGIN MODAL TO FALSE
+		setIsModalVisible(false);
+
+		return;
 	};
 
 	useEffect(() => {
@@ -74,6 +117,72 @@ const LoginScreen = () => {
 						Please sign in to continue our app
 					</Text>
 				</View>
+
+				{/* INVALID CREDENTIALS MODAL */}
+				<Modal
+					animationType='slide'
+					transparent={true}
+					visible={isInvalidVisible}
+					presentationStyle='overFullScreen'
+					onRequestClose={() => {
+						setIsInvalidVisible(!isInvalidVisible);
+					}}>
+					<View style={styles.modalBackground}>
+						<View style={styles.modalContent}>
+							<View style={styles.modalIcon}>
+								<Feather
+									name='x'
+									size={30}
+									color='#fff'
+								/>
+							</View>
+							<Text
+								style={{
+									...TextStyles.title,
+									marginBottom: hp(2),
+									textAlign: "center",
+								}}>
+								Invalid Credentials
+							</Text>
+							<Text style={{ ...TextStyles.textBase, textAlign: "center" }}>
+								The credentials you provided are invalid!{" "}
+							</Text>
+						</View>
+					</View>
+				</Modal>
+
+				{/* SUCCESSFUL CREDENTIALS MODAL */}
+				<Modal
+					animationType='slide'
+					transparent={true}
+					visible={isModalVisible}
+					presentationStyle='overFullScreen'
+					onRequestClose={() => {
+						setIsModalVisible(!isModalVisible);
+					}}>
+					<View style={styles.modalBackground}>
+						<View style={styles.modalContent}>
+							<View style={{ ...styles.modalIcon, backgroundColor: "#19B000" }}>
+								<Ionicons
+									name='checkmark-done'
+									size={30}
+									color='#fff'
+								/>
+							</View>
+							<Text
+								style={{
+									...TextStyles.title,
+									marginBottom: hp(2),
+									textAlign: "center",
+								}}>
+								Login Successful
+							</Text>
+							<Text style={{ ...TextStyles.textBase, textAlign: "center" }}>
+								You have successfully Logged-In
+							</Text>
+						</View>
+					</View>
+				</Modal>
 
 				{/* FORM CONTAINER */}
 				<View style={styles.formContainer}>
@@ -270,5 +379,39 @@ const styles = StyleSheet.create({
 	errorStyle: {
 		fontFamily: "Raleway_Light",
 		color: "#FF7029",
+	},
+
+	modalBackground: {
+		flex: 1,
+		backgroundColor: "rgba(0, 0, 0, 0.4)", // Semi-transparent black
+		alignItems: "center",
+		justifyContent: "center",
+	},
+
+	modalContent: {
+		backgroundColor: "white",
+		paddingVertical: hp(5),
+		paddingHorizontal: hp(3),
+		borderRadius: 30,
+		elevation: 5, // shadow for modal content
+		shadowColor: "#000",
+		shadowOffset: { width: 0, height: 20 },
+		shadowOpacity: 0.3,
+		shadowRadius: 30,
+		alignSelf: "center",
+	},
+	modalIcon: {
+		width: hp(6),
+		height: hp(6),
+		borderRadius: hp(4),
+		backgroundColor: "#FF7029",
+		alignItems: "center",
+		justifyContent: "center",
+		marginBottom: hp(3),
+		alignSelf: "center",
+	},
+	modalText: {
+		fontSize: 18,
+		marginBottom: 10,
 	},
 });
