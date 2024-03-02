@@ -244,14 +244,6 @@ const NewPasswordScreen = () => {
 						</Text>
 					</View>
 
-					{/* FORGET PASSWORD */}
-					<TouchableOpacity
-						onPress={() => navigation.goBack()}
-						activeOpacity={0.5}
-						style={{ width: "auto", marginLeft: "auto" }}>
-						<Text style={styles.forgetPasswordText}>Back to Login</Text>
-					</TouchableOpacity>
-
 					{/* SUBMIT BUTTON CONTAINER */}
 					<TouchableOpacity
 						onPress={handleSubmit(submit)}

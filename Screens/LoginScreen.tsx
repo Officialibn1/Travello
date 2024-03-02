@@ -303,7 +303,7 @@ const LoginScreen = () => {
 						style={{ ...styles.socialIcon, backgroundColor: "#F7F7F9" }}>
 						<FontAwesome
 							name='facebook'
-							size={40}
+							size={hp(4)}
 							color='#1877F2'
 						/>
 					</TouchableOpacity>
@@ -315,7 +315,7 @@ const LoginScreen = () => {
 						style={{ ...styles.socialIcon, backgroundColor: "#F7F7F9" }}>
 						<FontAwesome
 							name='instagram'
-							size={40}
+							size={hp(4)}
 							color='#F50000'
 						/>
 					</TouchableOpacity>
@@ -326,7 +326,7 @@ const LoginScreen = () => {
 						style={{ ...styles.socialIcon, backgroundColor: "#F7F7F9" }}>
 						<FontAwesome6
 							name='x-twitter'
-							size={40}
+							size={hp(4)}
 							color='#03A9F4'
 						/>
 					</TouchableOpacity>
