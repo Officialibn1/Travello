@@ -40,7 +40,7 @@ type FormType = {
 
 const LoginScreen = () => {
 	// PASSWORD VISIBLE STATE
-	const [showPassword, setShowPassword] = useState(false);
+	const [showPassword, setShowPassword] = useState(true);
 
 	// INVALID MODAL STATE
 	const [isInvalidVisible, setIsInvalidVisible] = useState(false);
@@ -244,7 +244,7 @@ const LoginScreen = () => {
 									style={TextInputStyles.showHideButton}
 									onPress={() => setShowPassword((prev) => !prev)}>
 									<Feather
-										name={!showPassword ? "eye-off" : "eye"}
+										name={showPassword ? "eye-off" : "eye"}
 										size={24}
 										color='black'
 									/>

@@ -38,9 +38,11 @@ const NewPasswordScreen = () => {
 	const [isModalVisible, setIsModalVisible] = useState(false);
 
 	// PASSWORD VISIBLE STATE
-	const [showPassword, setShowPassword] = useState(false);
+	const [showPassword, setShowPassword] = useState(true);
 
-	const [confirmPass, setConfirmPass] = useState(false);
+	const [confirmPass, setConfirmPass] = useState(true);
+
+	const [confirmPassError, setConfirmPassError] = useState(false);
 
 	const toggleModal = () => {
 		setIsModalVisible((prev) => !prev);
@@ -63,11 +65,11 @@ const NewPasswordScreen = () => {
 
 	const submit = async (data: FormType) => {
 		if (data.confirmPassword !== data.password) {
-			setConfirmPass(true);
+			setConfirmPassError(true);
 
 			return;
 		}
-		setConfirmPass(false);
+		setConfirmPassError(false);
 
 		toggleModal();
 
@@ -160,7 +162,7 @@ const NewPasswordScreen = () => {
 									style={TextInputStyles.showHideButton}
 									onPress={() => setShowPassword((prev) => !prev)}>
 									<Feather
-										name={!showPassword ? "eye-off" : "eye"}
+										name={showPassword ? "eye-off" : "eye"}
 										size={24}
 										color='black'
 									/>
@@ -194,7 +196,7 @@ const NewPasswordScreen = () => {
 								<TextInput
 									style={TextInputStyles.input}
 									placeholder='Confirm Password'
-									secureTextEntry={showPassword}
+									secureTextEntry={confirmPass}
 									placeholderTextColor={"#000"}
 									autoCapitalize='none'
 									onChangeText={onChange}
@@ -204,9 +206,9 @@ const NewPasswordScreen = () => {
 
 								<TouchableOpacity
 									style={TextInputStyles.showHideButton}
-									onPress={() => setShowPassword((prev) => !prev)}>
+									onPress={() => setConfirmPass((prev) => !prev)}>
 									<Feather
-										name={!showPassword ? "eye-off" : "eye"}
+										name={confirmPass ? "eye-off" : "eye"}
 										size={24}
 										color='black'
 									/>
@@ -223,7 +225,7 @@ const NewPasswordScreen = () => {
 						</Text>
 					)}
 
-					{confirmPass && (
+					{confirmPassError && (
 						<Text style={styles.errorStyle}>
 							{confirmPass ? "Confirm password must match your password!" : ""}
 						</Text>

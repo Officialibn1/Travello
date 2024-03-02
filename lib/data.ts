@@ -10,8 +10,7 @@ export type OnboardingData = {
 export const onboardingData: OnboardingData[] = [
 	{
 		id: "23kqe",
-		imgUrl:
-			"https://raw.githubusercontent.com/Officialibn1/ibnsassets/main/uploads/Travelo1.png",
+		imgUrl: require("../assets/onboarding1.png"),
 		title: "Life is short and the",
 		title2: "world is ",
 		span: "wide",
@@ -19,8 +18,7 @@ export const onboardingData: OnboardingData[] = [
 	},
 	{
 		id: "xwee23",
-		imgUrl:
-			"https://raw.githubusercontent.com/Officialibn1/ibnsassets/main/uploads/Travelo2.png",
+		imgUrl: require("../assets/onboarding2.png"),
 		title: "It’s a big world out",
 		title2: "there go ",
 
@@ -29,8 +27,7 @@ export const onboardingData: OnboardingData[] = [
 	},
 	{
 		id: "xw342frv",
-		imgUrl:
-			"https://raw.githubusercontent.com/Officialibn1/ibnsassets/main/uploads/Travelo3.png",
+		imgUrl: require("../assets/onboarding3.png"),
 		title: "People don’t take trips,",
 		title2: "trips take ",
 

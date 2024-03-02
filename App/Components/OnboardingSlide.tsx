@@ -1,6 +1,7 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { OnboardingData } from "../../lib/data";
+
 // RESPONSIVE VALUE LIBRARY
 import {
 	widthPercentageToDP as wp,
@@ -11,15 +12,16 @@ import { TextStyles } from "../Shared/Styles";
 const OnboardingSlide = ({ data }: { data: OnboardingData }) => {
 	return (
 		<View style={styles.container}>
-			<Image
-				style={styles.image}
-				source={{
-					uri: data.imgUrl,
-				}}
-			/>
+			<View style={styles.imageContainer}>
+				<Image
+					style={styles.image}
+					// @ts-ignore
+					source={data.imgUrl}
+				/>
+			</View>
 
 			{/* TEXT CONTAINER */}
-			<View style={{ marginTop: hp(3), alignItems: "center" }}>
+			<View style={{ ...styles.textCon }}>
 				{/* TITLE */}
 				<Text style={TextStyles.title}>{data.title}</Text>
 
@@ -57,15 +59,23 @@ export default OnboardingSlide;
 
 const styles = StyleSheet.create({
 	container: {
-		height: "100%",
 		width: wp(100),
-		// borderWidth: 2,
 		alignItems: "center",
+	},
+	imageContainer: {
+		width: "100%",
+		height: hp(60),
+		borderBottomRightRadius: 30,
+		borderBottomLeftRadius: 30,
+		overflow: "hidden",
 	},
 	image: {
 		width: "100%",
-		height: "70%",
+		height: "100%",
 		resizeMode: "stretch",
 	},
-	textCon: {},
+	textCon: {
+		marginTop: hp(3),
+		alignItems: "center",
+	},
 });

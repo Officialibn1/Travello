@@ -180,12 +180,12 @@ const OTPScreen = () => {
 								key={i}
 								ref={inputRefs[i]}
 								style={TextInputStyles.otpInput}
-								// placeholder='example@example.com'
-								placeholderTextColor={"#000"}
+								secureTextEntry
 								onChangeText={(text) => handleChange(text, i)}
 								autoCapitalize='none'
 								value={otp[i]}
 								maxLength={1}
+								inputMode='numeric'
 								selectTextOnFocus={true}
 							/>
 						))}

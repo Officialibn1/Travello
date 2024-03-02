@@ -2,6 +2,7 @@ import {
 	FlatList,
 	NativeScrollEvent,
 	NativeSyntheticEvent,
+	ScrollView,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
@@ -58,51 +59,56 @@ const OnboardingScreen = () => {
 		}
 	};
 	return (
-		<View style={styles.container}>
-			{/* SLIDE LIST */}
-			<FlatList
-				ref={slideRef}
-				data={onboardingData}
-				onMomentumScrollEnd={(e) => updateCSI(e)}
-				renderItem={({ item }) => <OnboardingSlide data={item} />}
-				horizontal
-				pagingEnabled
-				showsHorizontalScrollIndicator={false}
-				contentContainerStyle={styles.flatList}
+		<View style={{ flex: 1 }}>
+			<ScrollView
+				showsVerticalScrollIndicator={false}
 				bounces={false}
-			/>
+				style={styles.container}>
+				{/* SLIDE LIST */}
+				<FlatList
+					ref={slideRef}
+					data={onboardingData}
+					onMomentumScrollEnd={(e) => updateCSI(e)}
+					renderItem={({ item }) => <OnboardingSlide data={item} />}
+					horizontal
+					pagingEnabled
+					showsHorizontalScrollIndicator={false}
+					contentContainerStyle={styles.flatList}
+					bounces={false}
+				/>
 
-			{/* BOTTOM CONTENT WRAPPER */}
-			<View style={styles.bottonWrapper}>
-				{/* INDICATOR WRAPPER */}
-				<View style={styles.indicatorWrapper}>
-					{onboardingData.map((_, i) => (
-						<View
-							key={i}
-							style={[
-								styles.indicator,
-								slideIndex === i && {
-									backgroundColor: "#24BAEC",
-									width: wp(8),
-								},
-							]}
-						/>
-					))}
-				</View>
+				{/* BOTTOM CONTENT WRAPPER */}
+				<View style={styles.bottonWrapper}>
+					{/* INDICATOR WRAPPER */}
+					<View style={styles.indicatorWrapper}>
+						{onboardingData.map((_, i) => (
+							<View
+								key={i}
+								style={[
+									styles.indicator,
+									slideIndex === i && {
+										backgroundColor: "#24BAEC",
+										width: wp(8),
+									},
+								]}
+							/>
+						))}
+					</View>
 
-				{/* BUTTON WRAPPER */}
-				<View style={styles.buttonWrapper}>
-					{/* BUTTON */}
-					<TouchableOpacity
-						onPress={() => nextSlideFunc()}
-						activeOpacity={0.5}
-						style={styles.button}>
-						<Text style={styles.buttonText}>
-							{slideIndex === 0 ? "Get Started" : "Next"}
-						</Text>
-					</TouchableOpacity>
+					{/* BUTTON WRAPPER */}
+					<View style={styles.buttonWrapper}>
+						{/* BUTTON */}
+						<TouchableOpacity
+							onPress={() => nextSlideFunc()}
+							activeOpacity={0.5}
+							style={styles.button}>
+							<Text style={styles.buttonText}>
+								{slideIndex === 0 ? "Get Started" : "Next"}
+							</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
-			</View>
+			</ScrollView>
 		</View>
 	);
 };
@@ -114,12 +120,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	flatList: {
-		height: hp(80),
 		width: wp(300),
-		// gap: 10,
 	},
 	bottonWrapper: {
-		height: hp(20),
+		gap: hp(5),
+		marginBottom: hp(5),
 		justifyContent: "space-between",
 	},
 	indicatorWrapper: {
@@ -137,7 +142,7 @@ const styles = StyleSheet.create({
 	},
 	buttonWrapper: {
 		width: "100%",
-		marginBottom: "10%",
+		// marginBottom: "10%",
 		// borderWidth: 2,
 		paddingHorizontal: wp(5),
 	},
