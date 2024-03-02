@@ -36,18 +36,21 @@ export const onboardingData: OnboardingData[] = [
 	},
 ];
 
-type ValidLogins = { email: string; password: string };
+type ValidLogins = { name: string; email: string; password: string };
 // VALID LOGINS
 export const validLogins: ValidLogins[] = [
 	{
+		name: "Ibn Dev",
 		email: "ibn@ibn.com",
 		password: "12@Ab12345",
 	},
 	{
+		name: "Ibn Dev",
 		email: "ibn@gmail.com",
 		password: "12@Ab12345",
 	},
 	{
+		name: "John Doe",
 		email: "john@gmail.com",
 		password: "12@Ab12345",
 	},

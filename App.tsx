@@ -7,6 +7,9 @@ import * as SplashScreen from "expo-splash-screen";
 
 import { useFonts } from "expo-font";
 import AuthStack from "./App/Navigations/AuthStack";
+import { Provider } from "react-redux";
+import { store } from "./ReduxApp/store";
+import AuthWrapper from "./AuthWrapper";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -36,10 +39,8 @@ export default function App() {
 	onLayoutRootView();
 
 	return (
-		<NavigationContainer>
-			{/* <MainApp /> */}
-
-			<AuthStack />
-		</NavigationContainer>
+		<Provider store={store}>
+			<AuthWrapper />
+		</Provider>
 	);
 }
