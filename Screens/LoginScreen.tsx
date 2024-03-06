@@ -32,6 +32,8 @@ import {
 } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
 import { validLogins } from "../lib/data";
+import { useAppDispatch } from "../App/ReduxHooks";
+import { logIn } from "../ReduxApp/features/login/LoginSlice";
 
 type FormType = {
 	email: string;
@@ -41,6 +43,9 @@ type FormType = {
 const LoginScreen = () => {
 	// PASSWORD VISIBLE STATE
 	const [showPassword, setShowPassword] = useState(true);
+
+	// GET THE REDUX LOGIN REDUCER
+	const loginReducer = useAppDispatch();
 
 	// INVALID MODAL STATE
 	const [isInvalidVisible, setIsInvalidVisible] = useState(false);
@@ -90,6 +95,9 @@ const LoginScreen = () => {
 
 		// CREATE A MOCK DELAY
 		await new Promise((resolve) => setTimeout(resolve, 1800));
+
+		// LOGIN DISPATCH
+		loginReducer(logIn(user));
 
 		// SET THE SUCCESSFUL LOGIN MODAL TO FALSE
 		setIsModalVisible(false);
